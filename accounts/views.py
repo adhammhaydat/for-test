@@ -1,22 +1,14 @@
 from django.shortcuts import render
 from rest_framework import generics, status, views, permissions
-from .serializers import RegisterSerializer, LoginSerializer, LogoutSerializer
+from .serializers import RegisterSerializer
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import User
-
-from django.contrib.sites.shortcuts import get_current_site
-from django.urls import reverse
+from rest_framework.views import APIView
 import jwt
 from django.conf import settings
 
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
-
-from django.contrib.sites.shortcuts import get_current_site
-from django.urls import reverse
-
-from django.shortcuts import redirect
-from django.http import HttpResponsePermanentRedirect
+from django.http import HttpResponsePermanentRedirect,Http404
 import os
 
 
@@ -28,7 +20,7 @@ class CustomRedirect(HttpResponsePermanentRedirect):
 class RegisterView(generics.GenericAPIView):
 
     serializer_class = RegisterSerializer
-    
+
 
     def post(self, request):
         user = request.data
@@ -37,39 +29,42 @@ class RegisterView(generics.GenericAPIView):
         serializer.save()
         user_data = serializer.data
         user = User.objects.get(email=user_data['email'])
-        token = RefreshToken.for_user(user).access_token
-        current_site = get_current_site(request).domain
-        relativeLink = reverse('email-verify')
-        # absurl = 'http://'+current_site+relativeLink+"?token="+str(token)
-        # email_body = 'Hi '+user.username + \
-        #     ' Use the link below to verify your email \n' + absurl
-        # data = {'email_body': email_body, 'to_email': user.email,
-        #         'email_subject': 'Verify your email'}
+
 
         return Response(user_data, status=status.HTTP_201_CREATED)
 
 
-class LoginAPIView(generics.GenericAPIView):
-    serializer_class = LoginSerializer
 
-    def post(self, request):
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+class PhotoDetail(APIView):
 
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly)
 
+    def get_object(self, pk):
+        try:
+            return User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            raise Http404
 
+    def get(self, request, pk, format=None):
+        photo = self.get_object(pk)
+        serializer = RegisterSerializer(photo)
+        return Response(serializer.data)
 
+    def put(self, request, pk, format=None):
+        photo = self.get_object(pk)
+        serializer = RegisterSerializer(photo, data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class LogoutAPIView(generics.GenericAPIView):
-    serializer_class = LogoutSerializer
-
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def post(self, request):
-
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
+    def delete(self, request, pk, format=None):
+        photo = self.get_object(pk)
+        photo.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def pre_save(self, obj):
+        obj.owner = self.request.user
+
+
+

@@ -10,7 +10,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 class UserManager(BaseUserManager):
 
-    def create_user(self,username, email , password=None):
+    def create_user(self,username, email , password=None,**Kwargs):
         if username is None:
             raise TypeError('Users should have a username')
         if email is None:
@@ -18,7 +18,7 @@ class UserManager(BaseUserManager):
         # is_company, phone_number, profile_img ,card_id_img,commercial_record_img,country =  kwargs['phone_number'],kwargs['is_company'], kwargs['phone_number'],kwargs['profile_img'],
         # kwargs['card_id_img'],kwargs['commercial_record_img'],kwargs['country']
         # ,is_company=is_company,  phone_number = phone_number, profile_img = profile_img ,card_id_img = card_id_img ,commercial_record_img = commercial_record_img,country = country
-        user = self.model(username=username, email=self.normalize_email(email))
+        user = self.model(username=username, email=self.normalize_email(email),**Kwargs)
         user.set_password(password)
         user.save()
         return user
@@ -39,11 +39,13 @@ AUTH_PROVIDERS = {'facebook': 'facebook', 'google': 'google',
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    def upload_to(instance,filename):
+        return 'photos/{filename}'.format(filename=filename)
     is_company = models.BooleanField(default=False)
     phone_number = models.CharField(max_length=32,default=False)
-    profile_img = models.CharField(max_length=255,default=False)
-    card_id_img =  models.CharField(max_length=255,default=False)
-    commercial_record_img = models.CharField(max_length=255,default=False)
+    profile_img = models.ImageField(max_length=None , upload_to = upload_to,default = "photos/photos/adham-img_Lh0ntBw.jpg")
+    card_id_img =  models.ImageField(max_length=None , upload_to = upload_to,default = "photos/photos/adham-img_Lh0ntBw.jpg")
+    commercial_record_img = models.ImageField(max_length=None , upload_to = upload_to,default = "photos/photos/adham-img_Lh0ntBw.jpg")
     country = models.CharField(max_length=32,default=False)
     username = models.CharField(max_length=255, unique=True, db_index=True)
     email = models.EmailField(max_length=255, unique=True, db_index=True)
@@ -60,7 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['username']
 
     objects = UserManager()
-
+    
     def __str__(self):
         return self.email
 
