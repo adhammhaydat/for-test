@@ -84,6 +84,17 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-cors-headers"
+version = "3.10.1"
+description = "django-cors-headers is a Django application for handling the server headers required for Cross-Origin Resource Sharing (CORS)."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+Django = ">=2.2"
+
+[[package]]
 name = "djangorestframework"
 version = "3.12.4"
 description = "Web APIs for Django, made easy."
@@ -241,10 +252,21 @@ category = "main"
 optional = false
 python-versions = ">=2"
 
+[[package]]
+name = "whitenoise"
+version = "5.3.0"
+description = "Radically simplified static file serving for WSGI applications"
+category = "main"
+optional = false
+python-versions = ">=3.5, <4"
+
+[package.extras]
+brotli = ["brotli"]
+
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "11f2a9bdd39a33a2868d945a9ca8e3fc9c8d0b6bf607f6f8bc9a3652c9b91439"
+content-hash = "1a21277d546a41268d0c835cd2c66cc5100041a339867536dbf69024772af62f"
 
 [metadata.files]
 asgiref = [
@@ -284,6 +306,10 @@ colorama = [
 django = [
     {file = "Django-4.0-py3-none-any.whl", hash = "sha256:59304646ebc6a77b9b6a59adc67d51ecb03c5e3d63ed1f14c909cdfda84e8010"},
     {file = "Django-4.0.tar.gz", hash = "sha256:d5a8a14da819a8b9237ee4d8c78dfe056ff6e8a7511987be627192225113ee75"},
+]
+django-cors-headers = [
+    {file = "django-cors-headers-3.10.1.tar.gz", hash = "sha256:b5a874b492bcad99f544bb76ef679472259eb41ee5644ca62d1a94ddb26b7f6e"},
+    {file = "django_cors_headers-3.10.1-py3-none-any.whl", hash = "sha256:1390b5846e9835b0911e2574409788af87cd9154246aafbdc8ec546c93698fe6"},
 ]
 djangorestframework = [
     {file = "djangorestframework-3.12.4-py3-none-any.whl", hash = "sha256:6d1d59f623a5ad0509fe0d6bfe93cbdfe17b8116ebc8eda86d45f6e16e819aaf"},
@@ -387,4 +413,8 @@ typing-extensions = [
 tzdata = [
     {file = "tzdata-2021.5-py2.py3-none-any.whl", hash = "sha256:3eee491e22ebfe1e5cfcc97a4137cd70f092ce59144d81f8924a844de05ba8f5"},
     {file = "tzdata-2021.5.tar.gz", hash = "sha256:68dbe41afd01b867894bbdfd54fa03f468cfa4f0086bfb4adcd8de8f24f3ee21"},
+]
+whitenoise = [
+    {file = "whitenoise-5.3.0-py2.py3-none-any.whl", hash = "sha256:d963ef25639d1417e8a247be36e6aedd8c7c6f0a08adcb5a89146980a96b577c"},
+    {file = "whitenoise-5.3.0.tar.gz", hash = "sha256:d234b871b52271ae7ed6d9da47ffe857c76568f11dd30e28e18c5869dbd11e12"},
 ]

@@ -40,12 +40,12 @@ AUTH_PROVIDERS = {'facebook': 'facebook', 'google': 'google',
 
 class User(AbstractBaseUser, PermissionsMixin):
     def upload_to(instance,filename):
-        return 'photos/{filename}'.format(filename=filename)
+        return '{filename}'.format(filename=filename)
     is_company = models.BooleanField(default=False)
     phone_number = models.CharField(max_length=32,default=False)
-    profile_img = models.ImageField(max_length=None , upload_to = upload_to,default = "photos/photos/adham-img_Lh0ntBw.jpg")
-    card_id_img =  models.ImageField(max_length=None , upload_to = upload_to,default = "photos/photos/adham-img_Lh0ntBw.jpg")
-    commercial_record_img = models.ImageField(max_length=None , upload_to = upload_to,default = "photos/photos/adham-img_Lh0ntBw.jpg")
+    profile_img = models.ImageField(max_length=None , upload_to = upload_to,default = "photos/adham-img_Lh0ntBw.jpg")
+    card_id_img =  models.ImageField(max_length=None , upload_to = upload_to,default = "photos/adham-img_Lh0ntBw.jpg")
+    commercial_record_img = models.ImageField(max_length=None , upload_to = upload_to,default = "photos/adham-img_Lh0ntBw.jpg")
     country = models.CharField(max_length=32,default=False)
     username = models.CharField(max_length=255, unique=True, db_index=True)
     email = models.EmailField(max_length=255, unique=True, db_index=True)
@@ -64,7 +64,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
     
     def __str__(self):
-        return self.email
+        return self.username
 
     def tokens(self):
         refresh = RefreshToken.for_user(self)
