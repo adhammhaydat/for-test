@@ -3,10 +3,20 @@ from .models import User
 from django.contrib import auth
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
-# from django.contrib.auth.tokens import PasswordResetTokenGenerator
-# from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
-# from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
+
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+
+    @classmethod
+    def get_token(cls, user):
+        token = super(MyTokenObtainPairSerializer, cls).get_token(user)
+
+        # Add custom claims
+        token['email'] = user.email
+        return token
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
@@ -77,6 +87,7 @@ class LoginSerializer(serializers.ModelSerializer):
         return {
             'email': user.email,
             'username': user.username,
+            'password"': user.password,
             'tokens': user.tokens
         }
 
