@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Post, Offer, Comment, Activity
-
+from rest_framework.permissions import AllowAny
 from rest_framework.generics import (
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView,
@@ -36,7 +36,7 @@ class OfferViewsList(ListCreateAPIView):
 
 
 class OfferDetail(RetrieveUpdateDestroyAPIView):
-    permission_classes = (OfferIsOwnerOrReadOnly,)
+    permission_classes = (AllowAny,)
     queryset = Offer.objects.all()
     serializer_class = OfferSerializer
 

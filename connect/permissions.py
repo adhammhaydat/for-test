@@ -27,10 +27,10 @@ class OfferIsOwnerOrReadOnly(permissions.BasePermission):
 
         # if we're allowing the purchaser to be null in Model
         # then this will check for that case and allow access
-        if obj.owner is None:
+        if obj.owner_id is None:
             return True
 
-        return obj.owner == request.user
+        return obj.owner_id == request.user
 
 class CommentIsOwnerOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
